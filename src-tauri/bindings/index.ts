@@ -6,6 +6,6 @@ export type UpdateResponse = { "type": "ack" } | { "type": "action", action: Upd
 
 export type UpdateResponseAction = "install" | "skip";
 
-export type YaakNotification = { timestamp: string, timeout: number | null, id: string, title: string | null, message: string, color: string | null, action: YaakNotificationAction | null, };
+export type APIDoctorNotification = { timestamp: string, timeout: number | null, id: string, title: string | null, message: string, color: string | null, action: APIDoctorNotificationAction | null, };
 
-export type YaakNotificationAction = { label: string, url: string, };
+export type APIDoctorNotificationAction = { label: string, url: string, };

@@ -22,7 +22,7 @@ pub(crate) fn encrypt_data(data: &[u8], key: &Key<XChaCha20Poly1305>) -> Result<
 }
 
 pub(crate) fn decrypt_data(cipher_data: &[u8], key: &Key<XChaCha20Poly1305>) -> Result<Vec<u8>> {
-    // Yaak Tag + ID + Version + Nonce + ... ciphertext ...
+    // APIDoctor Tag + ID + Version + Nonce + ... ciphertext ...
     let (tag, rest) =
         cipher_data.split_at_checked(ENCRYPTION_TAG.len()).ok_or(InvalidEncryptedData)?;
     if tag != ENCRYPTION_TAG.as_bytes() {

@@ -16,7 +16,7 @@ export function Link({ href, children, noUnderline, className, ...other }: Props
 
   if (isExternal) {
     let finalHref = href;
-    if (href.startsWith('https://yaak.app')) {
+    if (href.startsWith('https://apidoctor.app')) {
       const url = new URL(href);
       url.searchParams.set('ref', appInfo.identifier);
       finalHref = url.toString();
@@ -50,5 +50,5 @@ export function Link({ href, children, noUnderline, className, ...other }: Props
 }
 
 export function FeedbackLink() {
-  return <Link href="https://yaak.app/roadmap">Feedback</Link>;
+  return <Link href="https://apidoctor.app/roadmap">Feedback</Link>;
 }

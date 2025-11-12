@@ -11,7 +11,7 @@ import type { Context } from './Context';
 export type { Context };
 
 /**
- * The global structure of a Yaak plugin
+ * The global structure of a APIDoctor plugin
  */
 export type PluginDefinition = {
   init?: (ctx: Context) => void | Promise<void>;

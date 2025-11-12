@@ -1,0 +1,253 @@
+name: Build & Release (main)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  prepare-release:
+    name: Determine version & create release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.determine.outputs.version }}
+      tag: ${{ steps.determine.outputs.tag }}
+      release_id: ${{ steps.create.outputs.release_id }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine next version
+        id: determine
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const releases = await github.paginate(
+              github.rest.repos.listReleases,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 100,
+              },
+            );
+
+            const sanitize = (value) => {
+              if (!value) {
+                return { major: 0, minor: 0, patch: 0 };
+              }
+
+              const match = value.replace(/^v/, '').match(/(\d+)\.(\d+)\.(\d+)/);
+              if (!match) {
+                return { major: 0, minor: 0, patch: 0 };
+              }
+
+              return {
+                major: parseInt(match[1], 10),
+                minor: parseInt(match[2], 10),
+                patch: parseInt(match[3], 10),
+              };
+            };
+
+            const bump = ({ major, minor, patch }) => {
+              patch += 1;
+              if (patch > 99) {
+                patch = 0;
+                minor += 1;
+              }
+              if (minor > 99) {
+                minor = 0;
+                major += 1;
+              }
+              return `${major}.${minor}.${patch}`;
+            };
+
+            const latest = releases.find((release) => !release.draft && !release.prerelease);
+            const nextVersion = latest ? bump(sanitize(latest.tag_name || latest.name)) : '0.0.1';
+            const tag = `v${nextVersion}`;
+
+            core.setOutput('version', nextVersion);
+            core.setOutput('tag', tag);
+
+      - name: Create (or update) release
+        id: create
+        uses: actions/github-script@v7
+        env:
+          VERSION: ${{ steps.determine.outputs.version }}
+          TAG_NAME: ${{ steps.determine.outputs.tag }}
+        with:
+          script: |
+            const version = process.env.VERSION;
+            const tag = process.env.TAG_NAME;
+            const body = [
+              `Automated release for main @ ${context.sha}.`,
+              '',
+              '## macOS',
+              '- Builds are currently unsigned. After downloading, clear the quarantine attribute to launch:',
+              '  `xattr -d com.apple.quarantine /Applications/APIDoctor.app`',
+              '',
+              '## Windows & Linux',
+              'Standard installers for x64 and ARM64 are attached as assets below.',
+            ].join('\n');
+
+            const params = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tag,
+              name: `Automated Release ${version}`,
+              body,
+              draft: false,
+              prerelease: false,
+              target_commitish: context.sha,
+            };
+
+            let release;
+            try {
+              release = await github.rest.repos.createRelease(params);
+            } catch (error) {
+              if (error.status === 422) {
+                const existing = await github.rest.repos.getReleaseByTag({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  tag,
+                });
+
+                release = await github.rest.repos.updateRelease({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  release_id: existing.data.id,
+                  tag_name: tag,
+                  name: params.name,
+                  body,
+                  draft: false,
+                  prerelease: false,
+                  target_commitish: context.sha,
+                });
+              } else {
+                throw error;
+              }
+            }
+
+            core.setOutput('release_id', release.data.id.toString());
+
+  build:
+    name: Build ${{ matrix.label }}
+    needs: prepare-release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            label: macos-arm64
+            target: aarch64-apple-darwin
+            yaak_arch: arm64
+            rust_target: aarch64-apple-darwin
+          - os: macos-latest
+            label: macos-x64
+            target: x86_64-apple-darwin
+            yaak_arch: x64
+            rust_target: x86_64-apple-darwin
+          - os: ubuntu-22.04
+            label: linux-x64
+            target: x86_64-unknown-linux-gnu
+            yaak_arch: x64
+            rust_target: x86_64-unknown-linux-gnu
+          - os: ubuntu-22.04
+            label: linux-arm64
+            target: aarch64-unknown-linux-gnu
+            yaak_arch: arm64
+            rust_target: aarch64-unknown-linux-gnu
+            needs_cross: true
+          - os: windows-latest
+            label: windows-x64
+            target: x86_64-pc-windows-msvc
+            yaak_arch: x64
+            rust_target: x86_64-pc-windows-msvc
+          - os: windows-latest
+            label: windows-arm64
+            target: aarch64-pc-windows-msvc
+            yaak_arch: arm64
+            rust_target: aarch64-pc-windows-msvc
+    steps:
+      - name: Checkout yaakapp/app
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust_target }}
+
+      - name: Cache cargo & target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            src-tauri/target/
+          key: ${{ runner.os }}-cargo-${{ matrix.label }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Install dependencies (ubuntu)
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Install cross toolchain (linux arm64)
+        if: matrix.needs_cross == true
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc6-dev-arm64-cross
+
+      - name: Install dependencies (windows)
+        if: matrix.os == 'windows-latest'
+        run: cargo install --force trusted-signing-cli
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Install Protoc for plugin-runtime
+        uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run bootstrap
+        run: npm run bootstrap
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Set version
+        run: npm run replace-version
+        env:
+          YAAK_VERSION: ${{ needs.prepare-release.outputs.tag }}
+
+      - name: Build & upload
+        uses: tauri-apps/tauri-action@v0
+        env:
+          YAAK_TARGET_ARCH: ${{ matrix.yaak_arch }}
+
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+          AZURE_CLIENT_ID: ${{ matrix.os == 'windows-latest' && secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ matrix.os == 'windows-latest' && secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ matrix.os == 'windows-latest' && secrets.AZURE_TENANT_ID }}
+        with:
+          args: --target ${{ matrix.target }} --config ./src-tauri/tauri.release.conf.json
+          releaseId: ${{ needs.prepare-release.outputs.release_id }}

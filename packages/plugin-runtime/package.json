@@ -6,9 +6,9 @@
     "build:main": "esbuild src/index.ts --bundle --platform=node --outfile=../../src-tauri/vendored/plugin-runtime/index.cjs"
   },
   "dependencies": {
-    "ws": "^8.18.0"
+    "ws": "^8.18.3"
   },
   "devDependencies": {
-    "@types/ws": "^8.5.13"
+    "@types/ws": "^8.18.1"
   }
 }

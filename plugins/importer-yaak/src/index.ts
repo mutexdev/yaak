@@ -2,8 +2,8 @@ import type { Environment, PluginDefinition } from '@yaakapp/api';
 
 export const plugin: PluginDefinition = {
   importer: {
-    name: 'Yaak',
-    description: 'Yaak official format',
+    name: 'APIDoctor',
+    description: 'APIDoctor official format',
     onImport(_ctx, args) {
       return migrateImport(args.text);
     },
@@ -22,8 +22,8 @@ export function migrateImport(contents: string) {
     return undefined;
   }
 
-  const isYaakExport = 'yaakSchema' in parsed;
-  if (!isYaakExport) {
+  const isAPIDoctorExport = 'yaakSchema' in parsed;
+  if (!isAPIDoctorExport) {
     return;
   }
 

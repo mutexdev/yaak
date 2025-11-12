@@ -61,7 +61,7 @@ export function HttpAuthenticationEditor({ model }: Props) {
           <p>
             Apply auth to all requests in <strong>{resolvedModelName(model)}</strong>
           </p>
-          <Link href="https://feedback.yaak.app/help/articles/2112119-request-inheritance">
+          <Link href="https://feedback.apidoctor.app/help/articles/2112119-request-inheritance">
             Documentation
           </Link>
         </EmptyStateText>

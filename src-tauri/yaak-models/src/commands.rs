@@ -144,7 +144,7 @@ pub(crate) fn workspace_models<R: Runtime>(
 
     // NOTE: There's something weird that happens on Linux. If we send Cyrillic (or maybe other)
     //  unicode characters in this response (doesn't matter where) then the following bug happens:
-    //  https://feedback.yaak.app/p/editing-the-url-sometimes-freezes-the-app
+    //  https://feedback.apidoctor.app/p/editing-the-url-sometimes-freezes-the-app
     //
     //  It's as if every string resulting from the JSON.parse of the models gets encoded slightly
     //  wrong or something, causing the above bug where Codemirror can't calculate the cursor

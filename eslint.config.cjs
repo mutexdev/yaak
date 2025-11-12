@@ -51,6 +51,7 @@ module.exports = defineConfig([
           extensions: ['.ts', '.tsx'],
         },
       },
+      'import/core-modules': ['codemirror-json-schema'],
     },
 
     rules: {
@@ -58,6 +59,13 @@ module.exports = defineConfig([
       'jsx-a11y/no-autofocus': 'off',
       'react/react-in-jsx-scope': 'off',
       'import/no-unresolved': 'off',
+      // React 19 compiler rules are too noisy for the current codebase; re-enable once we address them.
+      'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/refs': 'off',
+      'react-hooks/purity': 'off',
+      'react-hooks/immutability': 'off',
+      'react-hooks/incompatible-library': 'off',
 
       '@typescript-eslint/consistent-type-imports': [
         'error',

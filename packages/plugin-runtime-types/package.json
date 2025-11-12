@@ -12,9 +12,9 @@
     "url": "https://github.com/mountain-loop/yaak"
   },
   "bugs": {
-    "url": "https://feedback.yaak.app"
+    "url": "https://feedback.apidoctor.app"
   },
-  "homepage": "https://yaak.app",
+  "homepage": "https://apidoctor.app",
   "main": "lib/index.js",
   "typings": "./lib/index.d.ts",
   "files": [
@@ -31,9 +31,9 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@types/node": "^24.0.13"
+    "@types/node": "^24.10.1"
   },
   "devDependencies": {
-    "cpy-cli": "^5.0.0"
+    "cpy-cli": "^6.0.0"
   }
 }

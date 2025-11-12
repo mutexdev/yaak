@@ -1,7 +1,7 @@
 # Copy as cUrl
 
-A request action plugin for Yaak that converts HTTP requests into [curl](https://curl.se)
-commands, making it easy to share, debug, and execute requests outside Yaak.
+A request action plugin for APIDoctor that converts HTTP requests into [curl](https://curl.se)
+commands, making it easy to share, debug, and execute requests outside APIDoctor.
 
 ![Screenshot of context menu](screenshot.png)
 
@@ -24,7 +24,7 @@ that includes:
 
 ## Usage
 
-1. Configure an HTTP request as usual in Yaak
+1. Configure an HTTP request as usual in APIDoctor
 2. Right-click on the request in the sidebar
 3. Select 'Copy as Curl'
 4. The command is copied to your clipboard
@@ -54,7 +54,7 @@ curl -X POST 'https://api.example.com/users' \
 ### Request with Multi-part Form Data
 
 ```bash
-curl -X POST 'yaak.app' \
+curl -X POST 'apidoctor.app' \
   --header 'Content-Type: multipart/form-data' \
   --form 'hello=world' \
   --form file=@/path/to/file.json

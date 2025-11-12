@@ -23,7 +23,7 @@ const MAX_UPDATE_CHECK_HOURS_BETA: u64 = 3;
 const MAX_UPDATE_CHECK_HOURS_ALPHA: u64 = 1;
 
 // Create updater struct
-pub struct YaakUpdater {
+pub struct APIDoctorUpdater {
     last_update_check: SystemTime,
 }
 
@@ -60,7 +60,7 @@ pub enum UpdateTrigger {
     User,
 }
 
-impl YaakUpdater {
+impl APIDoctorUpdater {
     pub fn new() -> Self {
         Self {
             last_update_check: SystemTime::UNIX_EPOCH,

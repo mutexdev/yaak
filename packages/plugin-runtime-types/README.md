@@ -1,23 +1,23 @@
-# Yaak Plugin API
+# APIDoctor Plugin API
 
-Yaak is a desktop [API client](https://yaak.app/blog/yet-another-api-client) for
+APIDoctor is a desktop [API client](https://apidoctor.app/blog/yet-another-api-client) for
 interacting with REST, GraphQL, Server Sent Events (SSE), WebSocket, and gRPC APIs. It's
 built using Tauri, Rust, and ReactJS.
 
-Plugins can be created in TypeScript, which are executed alongside Yaak in a NodeJS
+Plugins can be created in TypeScript, which are executed alongside APIDoctor in a NodeJS
 runtime. This package contains the TypeScript type definitions required to make building
-Yaak plugins a breeze.
+APIDoctor plugins a breeze.
 
 ## Quick Start
 
-The easiest way to get started is by generating a plugin with the Yaak CLI:
+The easiest way to get started is by generating a plugin with the APIDoctor CLI:
 
 ```shell
 npx @yaakapp/cli generate
 ```
 
 For more details on creating plugins, check out
-the [Quick Start Guide](https://feedback.yaak.app/help/articles/6911763-plugins-quick-start)
+the [Quick Start Guide](https://feedback.apidoctor.app/help/articles/6911763-plugins-quick-start)
 
 ## Installation
 

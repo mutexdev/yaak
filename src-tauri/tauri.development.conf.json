@@ -1,6 +1,6 @@
 {
-  "productName": "Daak",
-  "identifier": "app.yaak.desktop.dev",
+  "productName": "APIDoctor Dev",
+  "identifier": "app.apidoctor.desktop.dev",
   "bundle": {
     "icon": [
       "icons/dev/32x32.png",

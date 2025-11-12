@@ -21,7 +21,7 @@ pub struct InternalEvent {
 
 /// Special type used to deserialize everything but the payload. This is so we can
 /// catch any plugin-related type errors, since payload is sent by the plugin author
-/// and all other fields are sent by Yaak first-party code.
+/// and all other fields are sent by APIDoctor first-party code.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct InternalEventRawPayload {

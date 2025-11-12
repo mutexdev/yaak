@@ -3,13 +3,7 @@ import { linter } from '@codemirror/lint';
 import type { EditorView } from '@codemirror/view';
 import type { GrpcRequest } from '@yaakapp-internal/models';
 import classNames from 'classnames';
-import {
-  handleRefresh,
-  jsonCompletion,
-  jsonSchemaLinter,
-  stateExtensions,
-  updateSchema,
-} from 'codemirror-json-schema';
+import * as codemirrorJsonSchema from 'codemirror-json-schema';
 import { useEffect, useMemo, useRef } from 'react';
 import type { ReflectResponseService } from '../hooks/useGrpc';
 import { showAlert } from '../lib/alert';
@@ -30,6 +24,14 @@ type Props = Pick<EditorProps, 'heightMode' | 'onChange' | 'className' | 'forceU
   request: GrpcRequest;
   protoFiles: string[];
 };
+
+const {
+  handleRefresh,
+  jsonCompletion,
+  jsonSchemaLinter,
+  stateExtensions,
+  updateSchema,
+} = codemirrorJsonSchema;
 
 export function GrpcEditor({
   services,

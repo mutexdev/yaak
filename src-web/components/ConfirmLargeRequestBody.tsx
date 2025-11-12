@@ -39,7 +39,7 @@ export function ConfirmLargeRequestBody({ children, request }: Props) {
         </p>
         <p>
           See{' '}
-          <Link href="https://feedback.yaak.app/en/help/articles/1198684-working-with-large-values">
+          <Link href="https://feedback.apidoctor.app/en/help/articles/1198684-working-with-large-values">
             Working With Large Values
           </Link>{' '}
           for tips.

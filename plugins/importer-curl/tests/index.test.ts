@@ -4,12 +4,12 @@ import { convertCurl } from '../src';
 
 describe('importer-curl', () => {
   test('Imports basic GET', () => {
-    expect(convertCurl('curl https://yaak.app')).toEqual({
+    expect(convertCurl('curl https://apidoctor.app')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
           }),
         ],
       },
@@ -17,12 +17,12 @@ describe('importer-curl', () => {
   });
 
   test('Explicit URL', () => {
-    expect(convertCurl('curl --url https://yaak.app')).toEqual({
+    expect(convertCurl('curl --url https://apidoctor.app')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
           }),
         ],
       },
@@ -43,12 +43,12 @@ describe('importer-curl', () => {
   });
 
   test('URL between', () => {
-    expect(convertCurl('curl -v https://yaak.app -X POST')).toEqual({
+    expect(convertCurl('curl -v https://apidoctor.app -X POST')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             method: 'POST',
           }),
         ],
@@ -57,12 +57,12 @@ describe('importer-curl', () => {
   });
 
   test('Random flags', () => {
-    expect(convertCurl('curl --random -Z -Y -S --foo https://yaak.app')).toEqual({
+    expect(convertCurl('curl --random -Z -Y -S --foo https://apidoctor.app')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
           }),
         ],
       },
@@ -70,12 +70,12 @@ describe('importer-curl', () => {
   });
 
   test('Imports --request method', () => {
-    expect(convertCurl('curl --request POST https://yaak.app')).toEqual({
+    expect(convertCurl('curl --request POST https://apidoctor.app')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             method: 'POST',
           }),
         ],
@@ -84,12 +84,12 @@ describe('importer-curl', () => {
   });
 
   test('Imports -XPOST method', () => {
-    expect(convertCurl('curl -XPOST --request POST https://yaak.app')).toEqual({
+    expect(convertCurl('curl -XPOST --request POST https://apidoctor.app')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             method: 'POST',
           }),
         ],
@@ -99,12 +99,12 @@ describe('importer-curl', () => {
 
   test('Imports multiple requests', () => {
     expect(
-      convertCurl('curl \\\n  https://yaak.app\necho "foo"\ncurl example.com;curl foo.com'),
+      convertCurl('curl \\\n  https://apidoctor.app\necho "foo"\ncurl example.com;curl foo.com'),
     ).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
-          baseRequest({ url: 'https://yaak.app' }),
+          baseRequest({ url: 'https://apidoctor.app' }),
           baseRequest({ url: 'example.com' }),
           baseRequest({ url: 'foo.com' }),
         ],
@@ -114,14 +114,14 @@ describe('importer-curl', () => {
 
   test('Imports form data', () => {
     expect(
-      convertCurl('curl -X POST -F "a=aaa" -F b=bbb" -F f=@filepath https://yaak.app'),
+      convertCurl('curl -X POST -F "a=aaa" -F b=bbb" -F f=@filepath https://apidoctor.app'),
     ).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
             method: 'POST',
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             headers: [
               {
                 name: 'Content-Type',
@@ -144,13 +144,13 @@ describe('importer-curl', () => {
   });
 
   test('Imports data params as form url-encoded', () => {
-    expect(convertCurl('curl -d a -d b -d c=ccc https://yaak.app')).toEqual({
+    expect(convertCurl('curl -d a -d b -d c=ccc https://apidoctor.app')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
             method: 'POST',
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             bodyType: 'application/x-www-form-urlencoded',
             headers: [
               {
@@ -173,13 +173,13 @@ describe('importer-curl', () => {
   });
 
   test('Imports combined data params as form url-encoded', () => {
-    expect(convertCurl(`curl -d 'a=aaa&b=bbb&c' https://yaak.app`)).toEqual({
+    expect(convertCurl(`curl -d 'a=aaa&b=bbb&c' https://apidoctor.app`)).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
             method: 'POST',
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             bodyType: 'application/x-www-form-urlencoded',
             headers: [
               {
@@ -203,14 +203,14 @@ describe('importer-curl', () => {
 
   test('Imports data params as text', () => {
     expect(
-      convertCurl('curl -H Content-Type:text/plain -d a -d b -d c=ccc https://yaak.app'),
+      convertCurl('curl -H Content-Type:text/plain -d a -d b -d c=ccc https://apidoctor.app'),
     ).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
             method: 'POST',
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             headers: [{ name: 'Content-Type', value: 'text/plain', enabled: true }],
             bodyType: 'text/plain',
             body: { text: 'a&b&c=ccc' },
@@ -244,7 +244,7 @@ describe('importer-curl', () => {
   test('Imports multi-line JSON', () => {
     expect(
       convertCurl(
-        `curl -H Content-Type:application/json -d $'{\n  "foo":"bar"\n}' https://yaak.app`,
+        `curl -H Content-Type:application/json -d $'{\n  "foo":"bar"\n}' https://apidoctor.app`,
       ),
     ).toEqual({
       resources: {
@@ -252,7 +252,7 @@ describe('importer-curl', () => {
         httpRequests: [
           baseRequest({
             method: 'POST',
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             headers: [{ name: 'Content-Type', value: 'application/json', enabled: true }],
             bodyType: 'application/json',
             body: { text: '{\n  "foo":"bar"\n}' },
@@ -264,13 +264,13 @@ describe('importer-curl', () => {
 
   test('Imports multiple headers', () => {
     expect(
-      convertCurl('curl -H Foo:bar --header Name -H AAA:bbb -H :ccc https://yaak.app'),
+      convertCurl('curl -H Foo:bar --header Name -H AAA:bbb -H :ccc https://apidoctor.app'),
     ).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             headers: [
               { name: 'Name', value: '', enabled: true },
               { name: 'Foo', value: 'bar', enabled: true },
@@ -284,12 +284,12 @@ describe('importer-curl', () => {
   });
 
   test('Imports basic auth', () => {
-    expect(convertCurl('curl --user user:pass https://yaak.app')).toEqual({
+    expect(convertCurl('curl --user user:pass https://apidoctor.app')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             authenticationType: 'basic',
             authentication: {
               username: 'user',
@@ -302,12 +302,12 @@ describe('importer-curl', () => {
   });
 
   test('Imports digest auth', () => {
-    expect(convertCurl('curl --digest --user user:pass https://yaak.app')).toEqual({
+    expect(convertCurl('curl --digest --user user:pass https://apidoctor.app')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             authenticationType: 'digest',
             authentication: {
               username: 'user',
@@ -320,12 +320,12 @@ describe('importer-curl', () => {
   });
 
   test('Imports cookie as header', () => {
-    expect(convertCurl('curl --cookie "foo=bar" https://yaak.app')).toEqual({
+    expect(convertCurl('curl --cookie "foo=bar" https://apidoctor.app')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             headers: [{ name: 'Cookie', value: 'foo=bar', enabled: true }],
           }),
         ],
@@ -334,12 +334,12 @@ describe('importer-curl', () => {
   });
 
   test('Imports query params', () => {
-    expect(convertCurl('curl "https://yaak.app" --url-query foo=bar --url-query baz=qux')).toEqual({
+    expect(convertCurl('curl "https://apidoctor.app" --url-query foo=bar --url-query baz=qux')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             urlParameters: [
               { name: 'foo', value: 'bar', enabled: true },
               { name: 'baz', value: 'qux', enabled: true },
@@ -351,12 +351,12 @@ describe('importer-curl', () => {
   });
 
   test('Imports query params from the URL', () => {
-    expect(convertCurl('curl "https://yaak.app?foo=bar&baz=a%20a"')).toEqual({
+    expect(convertCurl('curl "https://apidoctor.app?foo=bar&baz=a%20a"')).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             urlParameters: [
               { name: 'foo', value: 'bar', enabled: true },
               { name: 'baz', value: 'a a', enabled: true },
@@ -368,12 +368,12 @@ describe('importer-curl', () => {
   });
 
   test('Imports weird body', () => {
-    expect(convertCurl(`curl 'https://yaak.app' -X POST --data-raw 'foo=bar=baz'`)).toEqual({
+    expect(convertCurl(`curl 'https://apidoctor.app' -X POST --data-raw 'foo=bar=baz'`)).toEqual({
       resources: {
         workspaces: [baseWorkspace()],
         httpRequests: [
           baseRequest({
-            url: 'https://yaak.app',
+            url: 'https://apidoctor.app',
             method: "POST",
             bodyType: 'application/x-www-form-urlencoded',
             body: {

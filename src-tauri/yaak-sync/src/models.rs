@@ -105,7 +105,7 @@ impl SyncModel {
         let content_str = String::from_utf8(content.clone()).unwrap_or_default();
 
         // Check for some strings that will be in a model file for sure. If these strings
-        // don't exist, then it's probably not a Yaak file.
+        // don't exist, then it's probably not a APIDoctor file.
         if !content_str.contains("model") || !content_str.contains("id") {
             return Ok(None);
         }

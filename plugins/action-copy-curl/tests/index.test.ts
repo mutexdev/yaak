@@ -5,32 +5,32 @@ describe('exporter-curl', () => {
   test('Exports GET with params', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         urlParameters: [
           { name: 'a', value: 'aaa' },
           { name: 'b', value: 'bbb', enabled: true },
           { name: 'c', value: 'ccc', enabled: false },
         ],
       }),
-    ).toEqual([`curl 'https://yaak.app?a=aaa&b=bbb'`].join(` \\n  `));
+    ).toEqual([`curl 'https://apidoctor.app?a=aaa&b=bbb'`].join(` \\n  `));
   });
 
   test('Exports GET with params and hash', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app/path#section',
+        url: 'https://apidoctor.app/path#section',
         urlParameters: [
           { name: 'a', value: 'aaa' },
           { name: 'b', value: 'bbb', enabled: true },
           { name: 'c', value: 'ccc', enabled: false },
         ],
       }),
-    ).toEqual([`curl 'https://yaak.app/path?a=aaa&b=bbb#section'`].join(` \\n  `));
+    ).toEqual([`curl 'https://apidoctor.app/path?a=aaa&b=bbb#section'`].join(` \\n  `));
   });
   test('Exports POST with url form data', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         method: 'POST',
         bodyType: 'application/x-www-form-urlencoded',
         body: {
@@ -42,14 +42,14 @@ describe('exporter-curl', () => {
         },
       }),
     ).toEqual(
-      [`curl -X POST 'https://yaak.app'`, `--data 'a=aaa'`, `--data 'b=bbb'`].join(` \\\n  `),
+      [`curl -X POST 'https://apidoctor.app'`, `--data 'a=aaa'`, `--data 'b=bbb'`].join(` \\\n  `),
     );
   });
 
   test('Exports POST with GraphQL data', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         method: 'POST',
         bodyType: 'graphql',
         body: {
@@ -59,7 +59,7 @@ describe('exporter-curl', () => {
       }),
     ).toEqual(
       [
-        `curl -X POST 'https://yaak.app'`,
+        `curl -X POST 'https://apidoctor.app'`,
         `--data '{"query":"{foo,bar}","variables":{"a":"aaa","b":"bbb"}}'`,
       ].join(` \\\n  `),
     );
@@ -68,7 +68,7 @@ describe('exporter-curl', () => {
   test('Exports POST with GraphQL data no variables', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         method: 'POST',
         bodyType: 'graphql',
         body: {
@@ -76,14 +76,14 @@ describe('exporter-curl', () => {
         },
       }),
     ).toEqual(
-      [`curl -X POST 'https://yaak.app'`, `--data '{"query":"{foo,bar}"}'`].join(` \\\n  `),
+      [`curl -X POST 'https://apidoctor.app'`, `--data '{"query":"{foo,bar}"}'`].join(` \\\n  `),
     );
   });
 
   test('Exports PUT with multipart form', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         method: 'PUT',
         bodyType: 'multipart/form-data',
         body: {
@@ -97,7 +97,7 @@ describe('exporter-curl', () => {
       }),
     ).toEqual(
       [
-        `curl -X PUT 'https://yaak.app'`,
+        `curl -X PUT 'https://apidoctor.app'`,
         `--form 'a=aaa'`,
         `--form 'b=bbb'`,
         `--form f=@/foo/bar.png;type=image/png`,
@@ -108,7 +108,7 @@ describe('exporter-curl', () => {
   test('Exports JSON body', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         method: 'POST',
         bodyType: 'application/json',
         body: {
@@ -118,7 +118,7 @@ describe('exporter-curl', () => {
       }),
     ).toEqual(
       [
-        `curl -X POST 'https://yaak.app'`,
+        `curl -X POST 'https://apidoctor.app'`,
         `--header 'Content-Type: application/json'`,
         `--data '{"foo":"bar\\'s"}'`,
       ].join(` \\\n  `),
@@ -128,7 +128,7 @@ describe('exporter-curl', () => {
   test('Exports multi-line JSON body', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         method: 'POST',
         bodyType: 'application/json',
         body: {
@@ -138,7 +138,7 @@ describe('exporter-curl', () => {
       }),
     ).toEqual(
       [
-        `curl -X POST 'https://yaak.app'`,
+        `curl -X POST 'https://apidoctor.app'`,
         `--header 'Content-Type: application/json'`,
         `--data '{"foo":"bar",\n"baz":"qux"}'`,
       ].join(` \\\n  `),
@@ -160,55 +160,55 @@ describe('exporter-curl', () => {
   test('Basic auth', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         authenticationType: 'basic',
         authentication: {
           username: 'user',
           password: 'pass',
         },
       }),
-    ).toEqual([`curl 'https://yaak.app'`, `--user 'user:pass'`].join(` \\\n  `));
+    ).toEqual([`curl 'https://apidoctor.app'`, `--user 'user:pass'`].join(` \\\n  `));
   });
 
   test('Broken basic auth', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         authenticationType: 'basic',
         authentication: {},
       }),
-    ).toEqual([`curl 'https://yaak.app'`, `--user ':'`].join(` \\\n  `));
+    ).toEqual([`curl 'https://apidoctor.app'`, `--user ':'`].join(` \\\n  `));
   });
 
   test('Digest auth', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         authenticationType: 'digest',
         authentication: {
           username: 'user',
           password: 'pass',
         },
       }),
-    ).toEqual([`curl 'https://yaak.app'`, `--digest --user 'user:pass'`].join(` \\\n  `));
+    ).toEqual([`curl 'https://apidoctor.app'`, `--digest --user 'user:pass'`].join(` \\\n  `));
   });
 
   test('Bearer auth', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         authenticationType: 'bearer',
         authentication: {
           token: 'tok',
         },
       }),
-    ).toEqual([`curl 'https://yaak.app'`, `--header 'Authorization: Bearer tok'`].join(` \\\n  `));
+    ).toEqual([`curl 'https://apidoctor.app'`, `--header 'Authorization: Bearer tok'`].join(` \\\n  `));
   });
 
   test('Bearer auth with custom prefix', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         authenticationType: 'bearer',
         authentication: {
           token: 'abc123',
@@ -216,45 +216,45 @@ describe('exporter-curl', () => {
         },
       }),
     ).toEqual(
-      [`curl 'https://yaak.app'`, `--header 'Authorization: Token abc123'`].join(` \\\n  `),
+      [`curl 'https://apidoctor.app'`, `--header 'Authorization: Token abc123'`].join(` \\\n  `),
     );
   });
 
   test('Bearer auth with empty prefix', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         authenticationType: 'bearer',
         authentication: {
           token: 'xyz789',
           prefix: '',
         },
       }),
-    ).toEqual([`curl 'https://yaak.app'`, `--header 'Authorization: xyz789'`].join(` \\\n  `));
+    ).toEqual([`curl 'https://apidoctor.app'`, `--header 'Authorization: xyz789'`].join(` \\\n  `));
   });
 
   test('Broken bearer auth', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         authenticationType: 'bearer',
         authentication: {
           username: 'user',
           password: 'pass',
         },
       }),
-    ).toEqual([`curl 'https://yaak.app'`, `--header 'Authorization: Bearer'`].join(` \\\n  `));
+    ).toEqual([`curl 'https://apidoctor.app'`, `--header 'Authorization: Bearer'`].join(` \\\n  `));
   });
 
   test('Stale body data', async () => {
     expect(
       await convertToCurl({
-        url: 'https://yaak.app',
+        url: 'https://apidoctor.app',
         bodyType: 'none',
         body: {
           text: 'ignore me',
         },
       }),
-    ).toEqual([`curl 'https://yaak.app'`].join(` \\\n  `));
+    ).toEqual([`curl 'https://apidoctor.app'`].join(` \\\n  `));
   });
 });

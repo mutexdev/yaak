@@ -45,7 +45,7 @@ function SettingsLicenseCmp() {
         </Banner>
       ) : check.data?.type == 'personal_use' ? (
         <Banner color="notice" className="flex flex-col gap-3 max-w-lg">
-          <p>You are able to use Yaak for personal use only</p>
+          <p>You are able to use APIDoctor for personal use only</p>
         </Banner>
       ) : null}
 
@@ -55,14 +55,14 @@ function SettingsLicenseCmp() {
           <div className="flex flex-col gap-2">
             <h2 className="text-lg font-bold">Hey, I&apos;m Greg 👋🏼</h2>
             <p>
-              Yaak is free for personal projects and learning.{' '}
+              APIDoctor is free for personal projects and learning.{' '}
               {check.data?.type === 'trialing' ? 'After your trial, a ' : 'A '}
               license is required for work or commercial use.
             </p>
             <p>
               <Link
                 noUnderline
-                href={`https://yaak.app/pricing?s=learn&t=${check.data?.type ?? ''}`}
+                href={`https://apidoctor.app/pricing?s=learn&t=${check.data?.type ?? ''}`}
                 className="text-sm text-notice opacity-80 hover:opacity-100"
               >
                 Learn More
@@ -90,7 +90,7 @@ function SettingsLicenseCmp() {
           <Button
             color="secondary"
             size="sm"
-            onClick={() => openUrl('https://yaak.app/dashboard?s=support&ref=app.yaak.desktop')}
+            onClick={() => openUrl('https://apidoctor.app/dashboard?s=support&ref=app.yaak.desktop')}
             rightSlot={<Icon icon="external_link" />}
           >
             Direct Support
@@ -106,7 +106,7 @@ function SettingsLicenseCmp() {
             color="primary"
             onClick={() =>
               openUrl(
-                `https://yaak.app/pricing?s=purchase&ref=app.yaak.desktop&t=${check.data?.type ?? ''}`,
+                `https://apidoctor.app/pricing?s=purchase&ref=app.yaak.desktop&t=${check.data?.type ?? ''}`,
               )
             }
             rightSlot={<Icon icon="external_link" />}

@@ -388,7 +388,7 @@ function pairsToDataParameters(keyedPairs: FlagsByName): DataParameter[] {
       for (const param of params) {
         const [name, value] = splitOnce(param, '=');
         if (param.startsWith('@')) {
-          // Yaak doesn't support files in url-encoded data, so
+          // APIDoctor doesn't support files in url-encoded data, so
           dataParameters.push({
             name: name ?? '',
             value: '',

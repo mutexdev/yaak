@@ -1,58 +1,58 @@
 import type { Theme, ThemeComponentColors } from '@yaakapp-internal/plugins';
 import { defaultDarkTheme, defaultLightTheme } from './themes';
-import { YaakColor } from './yaakColor';
+import { APIDoctorColor } from './yaakColor';
 
-export type YaakColors = {
-  surface: YaakColor;
-  surfaceHighlight?: YaakColor;
-  surfaceActive?: YaakColor;
+export type APIDoctorColors = {
+  surface: APIDoctorColor;
+  surfaceHighlight?: APIDoctorColor;
+  surfaceActive?: APIDoctorColor;
 
-  text: YaakColor;
-  textSubtle?: YaakColor;
-  textSubtlest?: YaakColor;
+  text: APIDoctorColor;
+  textSubtle?: APIDoctorColor;
+  textSubtlest?: APIDoctorColor;
 
-  border?: YaakColor;
-  borderSubtle?: YaakColor;
-  borderFocus?: YaakColor;
+  border?: APIDoctorColor;
+  borderSubtle?: APIDoctorColor;
+  borderFocus?: APIDoctorColor;
 
-  shadow?: YaakColor;
-  backdrop?: YaakColor;
-  selection?: YaakColor;
+  shadow?: APIDoctorColor;
+  backdrop?: APIDoctorColor;
+  selection?: APIDoctorColor;
 
-  primary?: YaakColor;
-  secondary?: YaakColor;
-  info?: YaakColor;
-  success?: YaakColor;
-  notice?: YaakColor;
-  warning?: YaakColor;
-  danger?: YaakColor;
+  primary?: APIDoctorColor;
+  secondary?: APIDoctorColor;
+  info?: APIDoctorColor;
+  success?: APIDoctorColor;
+  notice?: APIDoctorColor;
+  warning?: APIDoctorColor;
+  danger?: APIDoctorColor;
 };
 
-export type YaakTheme = {
+export type APIDoctorTheme = {
   id: string;
   name: string;
-  base: YaakColors;
+  base: APIDoctorColors;
   components?: Partial<{
-    dialog: Partial<YaakColors>;
-    menu: Partial<YaakColors>;
-    toast: Partial<YaakColors>;
-    sidebar: Partial<YaakColors>;
-    responsePane: Partial<YaakColors>;
-    appHeader: Partial<YaakColors>;
-    button: Partial<YaakColors>;
-    banner: Partial<YaakColors>;
-    templateTag: Partial<YaakColors>;
-    urlBar: Partial<YaakColors>;
-    editor: Partial<YaakColors>;
-    input: Partial<YaakColors>;
+    dialog: Partial<APIDoctorColors>;
+    menu: Partial<APIDoctorColors>;
+    toast: Partial<APIDoctorColors>;
+    sidebar: Partial<APIDoctorColors>;
+    responsePane: Partial<APIDoctorColors>;
+    appHeader: Partial<APIDoctorColors>;
+    button: Partial<APIDoctorColors>;
+    banner: Partial<APIDoctorColors>;
+    templateTag: Partial<APIDoctorColors>;
+    urlBar: Partial<APIDoctorColors>;
+    editor: Partial<APIDoctorColors>;
+    input: Partial<APIDoctorColors>;
   }>;
 };
 
-export type YaakColorKey = keyof ThemeComponentColors;
+export type APIDoctorColorKey = keyof ThemeComponentColors;
 
-type ComponentName = keyof NonNullable<YaakTheme['components']>;
+type ComponentName = keyof NonNullable<APIDoctorTheme['components']>;
 
-type CSSVariables = Record<YaakColorKey, string | undefined>;
+type CSSVariables = Record<APIDoctorColorKey, string | undefined>;
 
 function themeVariables(
   theme: Theme,
@@ -78,7 +78,7 @@ function themeVariables(
     textSubtlest: cmp.textSubtlest ?? c(cmp.text)?.lower(0.3)?.css(),
     shadow:
       cmp.shadow ??
-      YaakColor.black()
+      APIDoctorColor.black()
         .translucify(theme.dark ? 0.7 : 0.93)
         .css(),
     primary: cmp.primary,
@@ -92,15 +92,15 @@ function themeVariables(
 
   // Extend with base
   for (const [k, v] of Object.entries(vars)) {
-    if (!v && base?.[k as YaakColorKey]) {
-      vars[k as YaakColorKey] = base[k as YaakColorKey];
+    if (!v && base?.[k as APIDoctorColorKey]) {
+      vars[k as APIDoctorColorKey] = base[k as APIDoctorColorKey];
     }
   }
 
   return vars;
 }
 
-function templateTagColorVariables(color: YaakColor | null): Partial<CSSVariables> {
+function templateTagColorVariables(color: APIDoctorColor | null): Partial<CSSVariables> {
   if (color == null) return {};
 
   return {
@@ -113,7 +113,7 @@ function templateTagColorVariables(color: YaakColor | null): Partial<CSSVariable
   };
 }
 
-function toastColorVariables(color: YaakColor | null): Partial<CSSVariables> {
+function toastColorVariables(color: APIDoctorColor | null): Partial<CSSVariables> {
   if (color == null) return {};
 
   return {
@@ -125,7 +125,7 @@ function toastColorVariables(color: YaakColor | null): Partial<CSSVariables> {
   };
 }
 
-function bannerColorVariables(color: YaakColor | null): Partial<CSSVariables> {
+function bannerColorVariables(color: APIDoctorColor | null): Partial<CSSVariables> {
   if (color == null) return {};
 
   return {
@@ -138,7 +138,7 @@ function bannerColorVariables(color: YaakColor | null): Partial<CSSVariables> {
 }
 
 function buttonSolidColorVariables(
-  color: YaakColor | null,
+  color: APIDoctorColor | null,
   isDefault: boolean = false,
 ): Partial<CSSVariables> {
   if (color == null) return {};
@@ -160,7 +160,7 @@ function buttonSolidColorVariables(
 }
 
 function buttonBorderColorVariables(
-  color: YaakColor | null,
+  color: APIDoctorColor | null,
   isDefault: boolean = false,
 ): Partial<CSSVariables> {
   if (color == null) return {};
@@ -209,7 +209,7 @@ function componentCSS(theme: Theme, component: ComponentName): string | null {
 
 function buttonCSS(
   theme: Theme,
-  color: YaakColorKey,
+  color: APIDoctorColorKey,
   colors?: ThemeComponentColors,
 ): string | null {
   const yaakColor = yc(theme, colors?.[color]);
@@ -225,7 +225,7 @@ function buttonCSS(
 
 function bannerCSS(
   theme: Theme,
-  color: YaakColorKey,
+  color: APIDoctorColorKey,
   colors?: ThemeComponentColors,
 ): string | null {
   const yaakColor = yc(theme, colors?.[color]);
@@ -238,7 +238,7 @@ function bannerCSS(
   );
 }
 
-function toastCSS(theme: Theme, color: YaakColorKey, colors?: ThemeComponentColors): string | null {
+function toastCSS(theme: Theme, color: APIDoctorColorKey, colors?: ThemeComponentColors): string | null {
   const yaakColor = yc(theme, colors?.[color]);
   if (yaakColor == null) {
     return null;
@@ -249,7 +249,7 @@ function toastCSS(theme: Theme, color: YaakColorKey, colors?: ThemeComponentColo
 
 function templateTagCSS(
   theme: Theme,
-  color: YaakColorKey,
+  color: APIDoctorColorKey,
   colors?: ThemeComponentColors,
 ): string | null {
   const yaakColor = yc(theme, colors?.[color]);
@@ -268,7 +268,7 @@ export function getThemeCSS(theme: Theme): string {
   theme.components.toast = theme.components.toast ?? theme.components.menu ?? {};
   const { components, id, label } = theme;
   const colors = Object.keys(theme.base).reduce((prev, key) => {
-    return { ...prev, [key]: theme.base[key as YaakColorKey] };
+    return { ...prev, [key]: theme.base[key as APIDoctorColorKey] };
   }, {}) as ThemeComponentColors;
 
   let themeCSS = '';
@@ -286,16 +286,16 @@ export function getThemeCSS(theme: Theme): string {
         buttonBorderColorVariables(yc(theme, theme.base.surface), true),
       ),
       ...Object.keys(colors ?? {}).map((key) =>
-        buttonCSS(theme, key as YaakColorKey, theme.components?.button ?? colors),
+        buttonCSS(theme, key as APIDoctorColorKey, theme.components?.button ?? colors),
       ),
       ...Object.keys(colors ?? {}).map((key) =>
-        bannerCSS(theme, key as YaakColorKey, theme.components?.banner ?? colors),
+        bannerCSS(theme, key as APIDoctorColorKey, theme.components?.banner ?? colors),
       ),
       ...Object.keys(colors ?? {}).map((key) =>
-        toastCSS(theme, key as YaakColorKey, theme.components?.banner ?? colors),
+        toastCSS(theme, key as APIDoctorColorKey, theme.components?.banner ?? colors),
       ),
       ...Object.keys(colors ?? {}).map((key) =>
-        templateTagCSS(theme, key as YaakColorKey, theme.components?.templateTag ?? colors),
+        templateTagCSS(theme, key as APIDoctorColorKey, theme.components?.templateTag ?? colors),
       ),
     ].join('\n\n');
   } catch (err) {
@@ -342,9 +342,9 @@ export function indent(text: string, space = '    '): string {
 function yc<T extends string | null | undefined>(
   theme: Theme,
   s: T,
-): T extends string ? YaakColor : null {
+): T extends string ? APIDoctorColor : null {
   if (s == null) return null as never;
-  return new YaakColor(s, theme.dark ? 'dark' : 'light') as never;
+  return new APIDoctorColor(s, theme.dark ? 'dark' : 'light') as never;
 }
 
 export function completeTheme(theme: Theme): Theme {

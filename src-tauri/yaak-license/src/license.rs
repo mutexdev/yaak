@@ -202,7 +202,7 @@ fn build_url(path: &str) -> String {
     if is_dev() {
         format!("http://localhost:9444{path}")
     } else {
-        format!("https://license.yaak.app{path}")
+        format!("https://license.apidoctor.app{path}")
     }
 }
 

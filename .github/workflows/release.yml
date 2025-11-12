@@ -111,7 +111,7 @@ jobs:
         with:
           tagName: 'v__VERSION__'
           releaseName: 'Release __VERSION__'
-          releaseBody: '[Changelog __VERSION__](https://yaak.app/blog/__VERSION__)'
+          releaseBody: '[Changelog __VERSION__](https://apidoctor.app/blog/__VERSION__)'
           releaseDraft: true
           prerelease: true
           args: '${{ matrix.args }} --config ./src-tauri/tauri.release.conf.json'

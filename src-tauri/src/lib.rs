@@ -5,11 +5,11 @@ use crate::error::Result;
 use crate::grpc::{build_metadata, metadata_to_map, resolve_grpc_request};
 use crate::http_request::{resolve_http_request, send_http_request};
 use crate::import::import_data;
-use crate::notifications::YaakNotifier;
+use crate::notifications::APIDoctorNotifier;
 use crate::render::{render_grpc_request, render_template};
-use crate::updates::{UpdateMode, UpdateTrigger, YaakUpdater};
+use crate::updates::{UpdateMode, UpdateTrigger, APIDoctorUpdater};
 use crate::uri_scheme::handle_deep_link;
-use error::Result as YaakResult;
+use error::Result as APIDoctorResult;
 use eventsource_client::{EventParser, SSE};
 use log::{debug, error, info, warn};
 use std::collections::HashMap;
@@ -74,7 +74,7 @@ struct AppMetaData {
 }
 
 #[tauri::command]
-async fn cmd_metadata(app_handle: AppHandle) -> YaakResult<AppMetaData> {
+async fn cmd_metadata(app_handle: AppHandle) -> APIDoctorResult<AppMetaData> {
     let app_data_dir = app_handle.path().app_data_dir()?;
     let app_log_dir = app_handle.path().app_log_dir()?;
     Ok(AppMetaData {
@@ -93,7 +93,7 @@ async fn cmd_template_tokens_to_string<R: Runtime>(
     window: WebviewWindow<R>,
     app_handle: AppHandle<R>,
     tokens: Tokens,
-) -> YaakResult<String> {
+) -> APIDoctorResult<String> {
     let cb = PluginTemplateCallback::new(
         &app_handle,
         &PluginWindowContext::new(&window),
@@ -110,7 +110,7 @@ async fn cmd_render_template<R: Runtime>(
     template: &str,
     workspace_id: &str,
     environment_id: Option<&str>,
-) -> YaakResult<String> {
+) -> APIDoctorResult<String> {
     let environment_chain =
         app_handle.db().resolve_environments(workspace_id, None, environment_id)?;
     let result = render_template(
@@ -133,8 +133,8 @@ async fn cmd_render_template<R: Runtime>(
 async fn cmd_dismiss_notification<R: Runtime>(
     window: WebviewWindow<R>,
     notification_id: &str,
-    yaak_notifier: State<'_, Mutex<YaakNotifier>>,
-) -> YaakResult<()> {
+    yaak_notifier: State<'_, Mutex<APIDoctorNotifier>>,
+) -> APIDoctorResult<()> {
     Ok(yaak_notifier.lock().await.seen(&window, notification_id).await?)
 }
 
@@ -146,7 +146,7 @@ async fn cmd_grpc_reflect<R: Runtime>(
     window: WebviewWindow<R>,
     app_handle: AppHandle<R>,
     grpc_handle: State<'_, Mutex<GrpcHandle>>,
-) -> YaakResult<Vec<ServiceDefinition>> {
+) -> APIDoctorResult<Vec<ServiceDefinition>> {
     let unrendered_request = app_handle.db().get_grpc_request(request_id)?;
     let (resolved_request, auth_context_id) = resolve_grpc_request(&window, &unrendered_request)?;
 
@@ -196,7 +196,7 @@ async fn cmd_grpc_go<R: Runtime>(
     app_handle: AppHandle<R>,
     window: WebviewWindow<R>,
     grpc_handle: State<'_, Mutex<GrpcHandle>>,
-) -> YaakResult<String> {
+) -> APIDoctorResult<String> {
     let unrendered_request = app_handle.db().get_grpc_request(request_id)?;
     let (resolved_request, auth_context_id) = resolve_grpc_request(&window, &unrendered_request)?;
     let environment_chain = app_handle.db().resolve_environments(
@@ -699,7 +699,7 @@ async fn cmd_grpc_go<R: Runtime>(
 }
 
 #[tauri::command]
-async fn cmd_restart<R: Runtime>(app_handle: AppHandle<R>) -> YaakResult<()> {
+async fn cmd_restart<R: Runtime>(app_handle: AppHandle<R>) -> APIDoctorResult<()> {
     app_handle.request_restart();
     Ok(())
 }
@@ -711,7 +711,7 @@ async fn cmd_send_ephemeral_request<R: Runtime>(
     cookie_jar_id: Option<&str>,
     window: WebviewWindow,
     app_handle: AppHandle<R>,
-) -> YaakResult<HttpResponse> {
+) -> APIDoctorResult<HttpResponse> {
     let response = HttpResponse::default();
     request.id = "".to_string();
     let environment = match environment_id {
@@ -734,7 +734,7 @@ async fn cmd_send_ephemeral_request<R: Runtime>(
 }
 
 #[tauri::command]
-async fn cmd_format_json(text: &str) -> YaakResult<String> {
+async fn cmd_format_json(text: &str) -> APIDoctorResult<String> {
     Ok(format_json(text, "  "))
 }
 
@@ -744,7 +744,7 @@ async fn cmd_http_response_body<R: Runtime>(
     plugin_manager: State<'_, PluginManager>,
     response: HttpResponse,
     filter: Option<&str>,
-) -> YaakResult<FilterResponse> {
+) -> APIDoctorResult<FilterResponse> {
     let body_path = match response.body_path {
         None => {
             return Err(GenericError("Response body path not set".to_string()));
@@ -776,7 +776,7 @@ async fn cmd_http_response_body<R: Runtime>(
 }
 
 #[tauri::command]
-async fn cmd_get_sse_events(file_path: &str) -> YaakResult<Vec<ServerSentEvent>> {
+async fn cmd_get_sse_events(file_path: &str) -> APIDoctorResult<Vec<ServerSentEvent>> {
     let body = fs::read(file_path)?;
     let mut event_parser = EventParser::new();
     event_parser.process_bytes(body.into())?;
@@ -800,7 +800,7 @@ async fn cmd_get_sse_events(file_path: &str) -> YaakResult<Vec<ServerSentEvent>>
 async fn cmd_import_data<R: Runtime>(
     window: WebviewWindow<R>,
     file_path: &str,
-) -> YaakResult<BatchUpsertResult> {
+) -> APIDoctorResult<BatchUpsertResult> {
     import_data(&window, file_path).await
 }
 
@@ -808,7 +808,7 @@ async fn cmd_import_data<R: Runtime>(
 async fn cmd_http_request_actions<R: Runtime>(
     window: WebviewWindow<R>,
     plugin_manager: State<'_, PluginManager>,
-) -> YaakResult<Vec<GetHttpRequestActionsResponse>> {
+) -> APIDoctorResult<Vec<GetHttpRequestActionsResponse>> {
     Ok(plugin_manager.get_http_request_actions(&window).await?)
 }
 
@@ -816,7 +816,7 @@ async fn cmd_http_request_actions<R: Runtime>(
 async fn cmd_grpc_request_actions<R: Runtime>(
     window: WebviewWindow<R>,
     plugin_manager: State<'_, PluginManager>,
-) -> YaakResult<Vec<GetGrpcRequestActionsResponse>> {
+) -> APIDoctorResult<Vec<GetGrpcRequestActionsResponse>> {
     Ok(plugin_manager.get_grpc_request_actions(&window).await?)
 }
 
@@ -824,7 +824,7 @@ async fn cmd_grpc_request_actions<R: Runtime>(
 async fn cmd_template_function_summaries<R: Runtime>(
     window: WebviewWindow<R>,
     plugin_manager: State<'_, PluginManager>,
-) -> YaakResult<Vec<GetTemplateFunctionSummaryResponse>> {
+) -> APIDoctorResult<Vec<GetTemplateFunctionSummaryResponse>> {
     let results = plugin_manager.get_template_function_summaries(&window).await?;
     Ok(results)
 }
@@ -837,7 +837,7 @@ async fn cmd_template_function_config<R: Runtime>(
     values: HashMap<String, JsonPrimitive>,
     model: AnyModel,
     environment_id: Option<&str>,
-) -> YaakResult<GetTemplateFunctionConfigResponse> {
+) -> APIDoctorResult<GetTemplateFunctionConfigResponse> {
     let (workspace_id, folder_id) = match model.clone() {
         AnyModel::HttpRequest(m) => (m.workspace_id, m.folder_id),
         AnyModel::GrpcRequest(m) => (m.workspace_id, m.folder_id),
@@ -857,7 +857,7 @@ async fn cmd_template_function_config<R: Runtime>(
 async fn cmd_get_http_authentication_summaries<R: Runtime>(
     window: WebviewWindow<R>,
     plugin_manager: State<'_, PluginManager>,
-) -> YaakResult<Vec<GetHttpAuthenticationSummaryResponse>> {
+) -> APIDoctorResult<Vec<GetHttpAuthenticationSummaryResponse>> {
     let results = plugin_manager.get_http_authentication_summaries(&window).await?;
     Ok(results.into_iter().map(|(_, a)| a).collect())
 }
@@ -870,7 +870,7 @@ async fn cmd_get_http_authentication_config<R: Runtime>(
     values: HashMap<String, JsonPrimitive>,
     model: AnyModel,
     environment_id: Option<&str>,
-) -> YaakResult<GetHttpAuthenticationConfigResponse> {
+) -> APIDoctorResult<GetHttpAuthenticationConfigResponse> {
     let (workspace_id, folder_id) = match model.clone() {
         AnyModel::HttpRequest(m) => (m.workspace_id, m.folder_id),
         AnyModel::GrpcRequest(m) => (m.workspace_id, m.folder_id),
@@ -895,7 +895,7 @@ async fn cmd_call_http_request_action<R: Runtime>(
     window: WebviewWindow<R>,
     req: CallHttpRequestActionRequest,
     plugin_manager: State<'_, PluginManager>,
-) -> YaakResult<()> {
+) -> APIDoctorResult<()> {
     Ok(plugin_manager
         .call_http_request_action(
             &window,
@@ -915,7 +915,7 @@ async fn cmd_call_grpc_request_action<R: Runtime>(
     window: WebviewWindow<R>,
     req: CallGrpcRequestActionRequest,
     plugin_manager: State<'_, PluginManager>,
-) -> YaakResult<()> {
+) -> APIDoctorResult<()> {
     Ok(plugin_manager
         .call_grpc_request_action(
             &window,
@@ -939,7 +939,7 @@ async fn cmd_call_http_authentication_action<R: Runtime>(
     values: HashMap<String, JsonPrimitive>,
     model: AnyModel,
     environment_id: Option<&str>,
-) -> YaakResult<()> {
+) -> APIDoctorResult<()> {
     let (workspace_id, folder_id) = match model.clone() {
         AnyModel::HttpRequest(m) => (m.workspace_id, m.folder_id),
         AnyModel::GrpcRequest(m) => (m.workspace_id, m.folder_id),
@@ -970,7 +970,7 @@ async fn cmd_curl_to_request<R: Runtime>(
     command: &str,
     plugin_manager: State<'_, PluginManager>,
     workspace_id: &str,
-) -> YaakResult<HttpRequest> {
+) -> APIDoctorResult<HttpRequest> {
     let import_result = plugin_manager.import_data(&window, command).await?;
 
     Ok(import_result
@@ -992,7 +992,7 @@ async fn cmd_export_data<R: Runtime>(
     export_path: &str,
     workspace_ids: Vec<&str>,
     include_private_environments: bool,
-) -> YaakResult<()> {
+) -> APIDoctorResult<()> {
     let export_data =
         get_workspace_export_resources(&app_handle, workspace_ids, include_private_environments)?;
     let f = File::options()
@@ -1016,7 +1016,7 @@ async fn cmd_save_response<R: Runtime>(
     app_handle: AppHandle<R>,
     response_id: &str,
     filepath: &str,
-) -> YaakResult<()> {
+) -> APIDoctorResult<()> {
     let response = app_handle.db().get_http_response(response_id)?;
 
     let body_path =
@@ -1033,7 +1033,7 @@ async fn cmd_send_folder<R: Runtime>(
     environment_id: Option<String>,
     cookie_jar_id: Option<String>,
     folder_id: &str,
-) -> YaakResult<()> {
+) -> APIDoctorResult<()> {
     let requests = app_handle.db().list_http_requests_for_folder_recursive(folder_id)?;
     for request in requests {
         let app_handle = app_handle.clone();
@@ -1065,7 +1065,7 @@ async fn cmd_send_http_request<R: Runtime>(
     //   condition where the user may have just edited a field before sending
     //   that has not yet been saved in the DB.
     request: HttpRequest,
-) -> YaakResult<HttpResponse> {
+) -> APIDoctorResult<HttpResponse> {
     let response = app_handle.db().upsert_http_response(
         &HttpResponse {
             request_id: request.id.clone(),
@@ -1149,7 +1149,7 @@ async fn cmd_install_plugin<R: Runtime>(
     plugin_manager: State<'_, PluginManager>,
     app_handle: AppHandle<R>,
     window: WebviewWindow<R>,
-) -> YaakResult<Plugin> {
+) -> APIDoctorResult<Plugin> {
     plugin_manager.add_plugin_by_dir(&PluginWindowContext::new(&window), &directory).await?;
 
     Ok(app_handle.db().upsert_plugin(
@@ -1170,7 +1170,7 @@ async fn cmd_create_grpc_request<R: Runtime>(
     folder_id: Option<&str>,
     app_handle: AppHandle<R>,
     window: WebviewWindow<R>,
-) -> YaakResult<GrpcRequest> {
+) -> APIDoctorResult<GrpcRequest> {
     Ok(app_handle.db().upsert_grpc_request(
         &GrpcRequest {
             workspace_id: workspace_id.to_string(),
@@ -1188,7 +1188,7 @@ async fn cmd_reload_plugins<R: Runtime>(
     app_handle: AppHandle<R>,
     window: WebviewWindow<R>,
     plugin_manager: State<'_, PluginManager>,
-) -> YaakResult<()> {
+) -> APIDoctorResult<()> {
     plugin_manager.initialize_all_plugins(&app_handle, &PluginWindowContext::new(&window)).await?;
     Ok(())
 }
@@ -1198,7 +1198,7 @@ async fn cmd_plugin_info<R: Runtime>(
     id: &str,
     app_handle: AppHandle<R>,
     plugin_manager: State<'_, PluginManager>,
-) -> YaakResult<PluginMetadata> {
+) -> APIDoctorResult<PluginMetadata> {
     let plugin = app_handle.db().get_plugin(id)?;
     Ok(plugin_manager
         .get_plugin_by_dir(plugin.directory.as_str())
@@ -1212,7 +1212,7 @@ async fn cmd_delete_all_grpc_connections<R: Runtime>(
     request_id: &str,
     app_handle: AppHandle<R>,
     window: WebviewWindow<R>,
-) -> YaakResult<()> {
+) -> APIDoctorResult<()> {
     Ok(app_handle
         .db()
         .delete_all_grpc_connections_for_request(request_id, &UpdateSource::from_window(&window))?)
@@ -1223,7 +1223,7 @@ async fn cmd_delete_send_history<R: Runtime>(
     workspace_id: &str,
     app_handle: AppHandle<R>,
     window: WebviewWindow<R>,
-) -> YaakResult<()> {
+) -> APIDoctorResult<()> {
     Ok(app_handle.with_tx(|tx| {
         let source = &UpdateSource::from_window(&window);
         tx.delete_all_http_responses_for_workspace(workspace_id, source)?;
@@ -1238,7 +1238,7 @@ async fn cmd_delete_all_http_responses<R: Runtime>(
     request_id: &str,
     app_handle: AppHandle<R>,
     window: WebviewWindow<R>,
-) -> YaakResult<()> {
+) -> APIDoctorResult<()> {
     Ok(app_handle
         .db()
         .delete_all_http_responses_for_request(request_id, &UpdateSource::from_window(&window))?)
@@ -1248,7 +1248,7 @@ async fn cmd_delete_all_http_responses<R: Runtime>(
 async fn cmd_get_workspace_meta<R: Runtime>(
     app_handle: AppHandle<R>,
     workspace_id: &str,
-) -> YaakResult<WorkspaceMeta> {
+) -> APIDoctorResult<WorkspaceMeta> {
     let db = app_handle.db();
     let workspace = db.get_workspace(workspace_id)?;
     Ok(db.get_or_create_workspace_meta(&workspace.id)?)
@@ -1261,13 +1261,13 @@ async fn cmd_new_child_window(
     label: &str,
     title: &str,
     inner_size: (f64, f64),
-) -> YaakResult<()> {
+) -> APIDoctorResult<()> {
     window::create_child_window(&parent_window, url, label, title, inner_size)?;
     Ok(())
 }
 
 #[tauri::command]
-async fn cmd_new_main_window(app_handle: AppHandle, url: &str) -> YaakResult<()> {
+async fn cmd_new_main_window(app_handle: AppHandle, url: &str) -> APIDoctorResult<()> {
     window::create_main_window(&app_handle, url)?;
     Ok(())
 }
@@ -1275,8 +1275,8 @@ async fn cmd_new_main_window(app_handle: AppHandle, url: &str) -> YaakResult<()>
 #[tauri::command]
 async fn cmd_check_for_updates<R: Runtime>(
     window: WebviewWindow<R>,
-    yaak_updater: State<'_, Mutex<YaakUpdater>>,
-) -> YaakResult<bool> {
+    yaak_updater: State<'_, Mutex<APIDoctorUpdater>>,
+) -> APIDoctorResult<bool> {
     let update_mode = get_update_mode(&window).await?;
     let settings = window.db().get_settings();
     Ok(yaak_updater
@@ -1385,11 +1385,11 @@ pub fn run() {
             create_dir_all(app_data_dir.clone()).expect("Problem creating App directory!");
 
             // Add updater
-            let yaak_updater = YaakUpdater::new();
+            let yaak_updater = APIDoctorUpdater::new();
             app.manage(Mutex::new(yaak_updater));
 
             // Add notifier
-            let yaak_notifier = YaakNotifier::new();
+            let yaak_notifier = APIDoctorNotifier::new();
             app.manage(Mutex::new(yaak_notifier));
 
             // Add GRPC manager
@@ -1455,7 +1455,7 @@ pub fn run() {
                     let h = app_handle.clone();
                     tauri::async_runtime::spawn(async move {
                         let info = history::get_or_upsert_launch_info(&h);
-                        debug!("Launched Yaak {:?}", info);
+                        debug!("Launched APIDoctor {:?}", info);
                     });
 
                     // Cancel pending requests
@@ -1480,7 +1480,7 @@ pub fn run() {
                             let settings = w.db().get_settings();
                             if settings.autoupdate {
                                 time::sleep(Duration::from_secs(3)).await; // Wait a bit so it's not so jarring
-                                let val: State<'_, Mutex<YaakUpdater>> = h.state();
+                                let val: State<'_, Mutex<APIDoctorUpdater>> = h.state();
                                 let update_mode = get_update_mode(&w).await.unwrap();
                                 if let Err(e) = val
                                     .lock()
@@ -1499,7 +1499,7 @@ pub fn run() {
                         let windows = h.webview_windows();
                         let w = windows.values().next().unwrap();
                         tokio::time::sleep(Duration::from_millis(4000)).await;
-                        let val: State<'_, Mutex<YaakNotifier>> = w.state();
+                        let val: State<'_, Mutex<APIDoctorNotifier>> = w.state();
                         let mut n = val.lock().await;
                         if let Err(e) = n.maybe_check(&w).await {
                             warn!("Failed to check for notifications {}", e)
@@ -1521,7 +1521,7 @@ pub fn run() {
         });
 }
 
-async fn get_update_mode<R: Runtime>(window: &WebviewWindow<R>) -> YaakResult<UpdateMode> {
+async fn get_update_mode<R: Runtime>(window: &WebviewWindow<R>) -> APIDoctorResult<UpdateMode> {
     let settings = window.db().get_settings();
     Ok(UpdateMode::new(settings.update_channel.as_str()))
 }

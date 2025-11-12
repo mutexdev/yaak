@@ -1,7 +1,7 @@
 import { emit } from '@tauri-apps/api/event';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import type { InternalEvent, ShowToastRequest } from '@yaakapp-internal/plugins';
-import type { UpdateInfo, UpdateResponse, YaakNotification } from '@yaakapp-internal/tauri';
+import type { UpdateInfo, UpdateResponse, APIDoctorNotification } from '@yaakapp-internal/tauri';
 import { openSettings } from '../commands/openSettings';
 import { Button } from '../components/core/Button';
 import { ButtonInfiniteLoading } from '../components/core/ButtonInfiniteLoading';
@@ -53,7 +53,7 @@ export function initGlobalListeners() {
       timeout: null,
       message: (
         <VStack>
-          <h2 className="font-semibold">Yaak {version} was installed</h2>
+          <h2 className="font-semibold">APIDoctor {version} was installed</h2>
           <p className="text-text-subtle text-sm">Start using the new version now?</p>
         </VStack>
       ),
@@ -68,7 +68,7 @@ export function initGlobalListeners() {
             setTimeout(() => invokeCmd('cmd_restart', {}), 200);
           }}
         >
-          Relaunch Yaak
+          Relaunch APIDoctor
         </ButtonInfiniteLoading>
       ),
     });
@@ -90,7 +90,7 @@ export function initGlobalListeners() {
         timeout: null,
         message: (
           <VStack>
-            <h2 className="font-semibold">Yaak {version} is available</h2>
+            <h2 className="font-semibold">APIDoctor {version} is available</h2>
             <p className="text-text-subtle text-sm">
               {downloaded ? 'Do you want to install' : 'Download and install'} the update?
             </p>
@@ -115,7 +115,7 @@ export function initGlobalListeners() {
               variant="border"
               rightSlot={<Icon icon="external_link" />}
               onClick={async () => {
-                await openUrl('https://yaak.app/changelog/' + version);
+                await openUrl('https://apidoctor.app/changelog/' + version);
               }}
             >
               What&apos;s New
@@ -126,13 +126,13 @@ export function initGlobalListeners() {
     },
   );
 
-  listenToTauriEvent<YaakNotification>('notification', ({ payload }) => {
+  listenToTauriEvent<APIDoctorNotification>('notification', ({ payload }) => {
     console.log('Got notification event', payload);
     showNotificationToast(payload);
   });
 }
 
-function showNotificationToast(n: YaakNotification) {
+function showNotificationToast(n: APIDoctorNotification) {
   const actionUrl = n.action?.url;
   const actionLabel = n.action?.label;
   showToast({

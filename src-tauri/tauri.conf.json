@@ -1,7 +1,7 @@
 {
-  "productName": "Yaak",
+  "productName": "APIDoctor",
   "version": "0.0.0",
-  "identifier": "app.yaak.desktop",
+  "identifier": "app.apidoctor.desktop",
   "build": {
     "beforeBuildCommand": "npm run tauri-before-build",
     "beforeDevCommand": "npm run tauri-before-dev",
@@ -14,10 +14,7 @@
       "assetProtocol": {
         "enable": true,
         "scope": {
-          "allow": [
-            "$APPDATA/responses/*",
-            "$RESOURCE/static/*"
-          ]
+          "allow": ["$APPDATA/responses/*", "$RESOURCE/static/*"]
         }
       }
     }
@@ -25,23 +22,18 @@
   "plugins": {
     "deep-link": {
       "desktop": {
-        "schemes": [
-          "yaak"
-        ]
+        "schemes": ["apidoctor"]
       }
     }
   },
   "bundle": {
-    "publisher": "Yaak",
+    "publisher": "APIDoctor",
     "license": "MIT",
-    "copyright": "Yaak",
-    "homepage": "https://yaak.app",
+    "copyright": "APIDoctor",
+    "homepage": "https://apidoctor.app",
     "active": true,
     "category": "DeveloperTool",
-    "externalBin": [
-      "vendored/node/yaaknode",
-      "vendored/protoc/yaakprotoc"
-    ],
+    "externalBin": ["vendored/node/yaaknode", "vendored/protoc/yaakprotoc"],
     "icon": [
       "icons/release/32x32.png",
       "icons/release/128x128.png",
@@ -57,14 +49,7 @@
       "vendored/plugin-runtime"
     ],
     "shortDescription": "Play with APIs, intuitively",
-    "targets": [
-      "app",
-      "appimage",
-      "deb",
-      "dmg",
-      "nsis",
-      "rpm"
-    ],
+    "targets": ["app", "appimage", "deb", "dmg", "nsis", "rpm"],
     "macOS": {
       "minimumSystemVersion": "13.0",
       "exceptionDomain": "",

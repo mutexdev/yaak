@@ -297,7 +297,7 @@ function importEnvironment(
     public: !e.isPrivate,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    sortPriority: sortKey, // Will be added to Yaak later
+    sortPriority: sortKey, // Will be added to APIDoctor later
     parentModel: isParent ? 'workspace' : 'environment',
     parentId: null,
     model: 'environment',

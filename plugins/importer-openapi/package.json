@@ -11,8 +11,8 @@
     "test": "vitest --run tests"
   },
   "dependencies": {
-    "openapi-to-postmanv2": "^5.0.0",
-    "yaml": "^2.4.2"
+    "openapi-to-postmanv2": "^5.3.5",
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@types/openapi-to-postmanv2": "^5.0.0"

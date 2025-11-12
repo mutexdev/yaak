@@ -191,7 +191,7 @@ function importEnvironment(
     workspaceId: convertId(workspaceId),
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    sortPriority: e.metaSortKey, // Will be added to Yaak later
+    sortPriority: e.metaSortKey, // Will be added to APIDoctor later
     base: isParent ?? e.parentId === workspaceId,
     model: 'environment',
     name: e.name,

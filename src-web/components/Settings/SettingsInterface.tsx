@@ -162,12 +162,12 @@ function LicenseSettings({ settings }: { settings: Settings }) {
               <VStack space={3}>
                 <p>Hey there 👋🏼</p>
                 <p>
-                  Yaak is free for personal projects and learning.{' '}
-                  <strong>If you’re using Yaak at work, a license is required.</strong>
+                  APIDoctor is free for personal projects and learning.{' '}
+                  <strong>If you’re using APIDoctor at work, a license is required.</strong>
                 </p>
                 <p>
-                  Licenses help keep Yaak independent and sustainable.{' '}
-                  <Link href="https://yaak.app/pricing?s=badge">Purchase a License →</Link>
+                  Licenses help keep APIDoctor independent and sustainable.{' '}
+                  <Link href="https://apidoctor.app/pricing?s=badge">Purchase a License →</Link>
                 </p>
               </VStack>
             ),

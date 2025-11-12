@@ -13,7 +13,7 @@ pub(crate) fn migrate_db(pool: &Pool<SqliteConnectionManager>) -> Result<()> {
     info!("Running database migrations");
 
     // Ensure the table exists
-    // NOTE: Yaak used to use sqlx for migrations, so we need to mirror that table structure. We
+    // NOTE: APIDoctor used to use sqlx for migrations, so we need to mirror that table structure. We
     //  are writing checksum but not verifying because we want to be able to change migrations after
     //  a release in case something breaks.
     pool.get()?.execute(

@@ -6,17 +6,17 @@ describe('exporter-curl', () => {
     expect(
       await convert(
         {
-          url: 'https://yaak.app',
+          url: 'https://apidoctor.app',
         },
         [],
       ),
-    ).toEqual([`grpcurl yaak.app`].join(` \\\n  `));
+    ).toEqual([`grpcurl apidoctor.app`].join(` \\\n  `));
   });
   test('Basic metadata', async () => {
     expect(
       await convert(
         {
-          url: 'https://yaak.app',
+          url: 'https://apidoctor.app',
           metadata: [
             { name: 'aaa', value: 'AAA' },
             { enabled: true, name: 'bbb', value: 'BBB' },
@@ -25,34 +25,34 @@ describe('exporter-curl', () => {
         },
         [],
       ),
-    ).toEqual([`grpcurl -H 'aaa: AAA'`, `-H 'bbb: BBB'`, `yaak.app`].join(` \\\n  `));
+    ).toEqual([`grpcurl -H 'aaa: AAA'`, `-H 'bbb: BBB'`, `apidoctor.app`].join(` \\\n  `));
   });
   test('Single proto file', async () => {
-    expect(await convert({ url: 'https://yaak.app' }, ['/foo/bar/baz.proto'])).toEqual(
+    expect(await convert({ url: 'https://apidoctor.app' }, ['/foo/bar/baz.proto'])).toEqual(
       [
         `grpcurl -import-path '/foo/bar'`,
         `-import-path '/foo'`,
         `-proto '/foo/bar/baz.proto'`,
-        `yaak.app`,
+        `apidoctor.app`,
       ].join(` \\\n  `),
     );
   });
   test('Multiple proto files, same dir', async () => {
     expect(
-      await convert({ url: 'https://yaak.app' }, ['/foo/bar/aaa.proto', '/foo/bar/bbb.proto']),
+      await convert({ url: 'https://apidoctor.app' }, ['/foo/bar/aaa.proto', '/foo/bar/bbb.proto']),
     ).toEqual(
       [
         `grpcurl -import-path '/foo/bar'`,
         `-import-path '/foo'`,
         `-proto '/foo/bar/aaa.proto'`,
         `-proto '/foo/bar/bbb.proto'`,
-        `yaak.app`,
+        `apidoctor.app`,
       ].join(` \\\n  `),
     );
   });
   test('Multiple proto files, different dir', async () => {
     expect(
-      await convert({ url: 'https://yaak.app' }, ['/aaa/bbb/ccc.proto', '/xxx/yyy/zzz.proto']),
+      await convert({ url: 'https://apidoctor.app' }, ['/aaa/bbb/ccc.proto', '/xxx/yyy/zzz.proto']),
     ).toEqual(
       [
         `grpcurl -import-path '/aaa/bbb'`,
@@ -61,23 +61,23 @@ describe('exporter-curl', () => {
         `-import-path '/xxx'`,
         `-proto '/aaa/bbb/ccc.proto'`,
         `-proto '/xxx/yyy/zzz.proto'`,
-        `yaak.app`,
+        `apidoctor.app`,
       ].join(` \\\n  `),
     );
   });
   test('Single include dir', async () => {
-    expect(await convert({ url: 'https://yaak.app' }, ['/aaa/bbb'])).toEqual(
-      [`grpcurl -import-path '/aaa/bbb'`, `yaak.app`].join(` \\\n  `),
+    expect(await convert({ url: 'https://apidoctor.app' }, ['/aaa/bbb'])).toEqual(
+      [`grpcurl -import-path '/aaa/bbb'`, `apidoctor.app`].join(` \\\n  `),
     );
   });
   test('Multiple include dir', async () => {
-    expect(await convert({ url: 'https://yaak.app' }, ['/aaa/bbb', '/xxx/yyy'])).toEqual(
-      [`grpcurl -import-path '/aaa/bbb'`, `-import-path '/xxx/yyy'`, `yaak.app`].join(` \\\n  `),
+    expect(await convert({ url: 'https://apidoctor.app' }, ['/aaa/bbb', '/xxx/yyy'])).toEqual(
+      [`grpcurl -import-path '/aaa/bbb'`, `-import-path '/xxx/yyy'`, `apidoctor.app`].join(` \\\n  `),
     );
   });
   test('Mixed proto and dirs', async () => {
     expect(
-      await convert({ url: 'https://yaak.app' }, ['/aaa/bbb', '/xxx/yyy', '/foo/bar.proto']),
+      await convert({ url: 'https://apidoctor.app' }, ['/aaa/bbb', '/xxx/yyy', '/foo/bar.proto']),
     ).toEqual(
       [
         `grpcurl -import-path '/aaa/bbb'`,
@@ -85,7 +85,7 @@ describe('exporter-curl', () => {
         `-import-path '/foo'`,
         `-import-path '/'`,
         `-proto '/foo/bar.proto'`,
-        `yaak.app`,
+        `apidoctor.app`,
       ].join(` \\\n  `),
     );
   });
@@ -93,7 +93,7 @@ describe('exporter-curl', () => {
     expect(
       await convert(
         {
-          url: 'https://yaak.app',
+          url: 'https://apidoctor.app',
           message: JSON.stringify({ foo: 'bar', baz: 1.0 }, null, 2),
         },
         ['/foo.proto'],
@@ -103,7 +103,7 @@ describe('exporter-curl', () => {
         `grpcurl -import-path '/'`,
         `-proto '/foo.proto'`,
         `-d '{"foo":"bar","baz":1}'`,
-        `yaak.app`,
+        `apidoctor.app`,
       ].join(` \\\n  `),
     );
   });

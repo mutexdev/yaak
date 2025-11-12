@@ -611,7 +611,7 @@ export class PluginInstance {
       },
       templates: {
         /**
-         * Invoke Yaak's template engine to render a value. If the value is a nested type
+         * Invoke APIDoctor's template engine to render a value. If the value is a nested type
          * (eg. object), it will be recursively rendered.
          */
         render: async (args) => {

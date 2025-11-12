@@ -69,7 +69,7 @@ export function SettingsGeneral() {
           className="pl-2 mt-1 ml-[14rem]"
           checked={settings.autoDownloadUpdates}
           disabled={!settings.autoupdate}
-          help="Automatically download Yaak updates (!50MB) in the background, so they will be immediately ready to install."
+          help="Automatically download APIDoctor updates (!50MB) in the background, so they will be immediately ready to install."
           title="Automatically download updates"
           onChange={(autoDownloadUpdates) =>
             patchModel(settings, { autoDownloadUpdates })

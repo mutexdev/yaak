@@ -61,9 +61,9 @@ export function SettingsDropdown() {
         {
           label: 'Create Run Button',
           leftSlot: <Icon icon="rocket" />,
-          onSelect: () => openUrl('https://yaak.app/button/new'),
+          onSelect: () => openUrl('https://apidoctor.app/button/new'),
         },
-        { type: 'separator', label: `Yaak v${appInfo.version}` },
+        { type: 'separator', label: `APIDoctor v${appInfo.version}` },
         {
           label: 'Purchase License',
           color: 'success',
@@ -81,13 +81,13 @@ export function SettingsDropdown() {
           label: 'Feedback',
           leftSlot: <Icon icon="chat" />,
           rightSlot: <Icon icon="external_link" color="secondary" />,
-          onSelect: () => openUrl('https://yaak.app/feedback'),
+          onSelect: () => openUrl('https://apidoctor.app/feedback'),
         },
         {
           label: 'Changelog',
           leftSlot: <Icon icon="cake" />,
           rightSlot: <Icon icon="external_link" color="secondary" />,
-          onSelect: () => openUrl(`https://yaak.app/changelog/${appInfo.version}`),
+          onSelect: () => openUrl(`https://apidoctor.app/changelog/${appInfo.version}`),
         },
       ]}
     >

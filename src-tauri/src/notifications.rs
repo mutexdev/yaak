@@ -20,32 +20,32 @@ const KV_NAMESPACE: &str = "notifications";
 const KV_KEY: &str = "seen";
 
 // Create updater struct
-pub struct YaakNotifier {
+pub struct APIDoctorNotifier {
     last_check: SystemTime,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, TS)]
 #[serde(default, rename_all = "camelCase")]
 #[ts(export, export_to = "index.ts")]
-pub struct YaakNotification {
+pub struct APIDoctorNotification {
     timestamp: DateTime<Utc>,
     timeout: Option<f64>,
     id: String,
     title: Option<String>,
     message: String,
     color: Option<String>,
-    action: Option<YaakNotificationAction>,
+    action: Option<APIDoctorNotificationAction>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, TS)]
 #[serde(default, rename_all = "camelCase")]
 #[ts(export, export_to = "index.ts")]
-pub struct YaakNotificationAction {
+pub struct APIDoctorNotificationAction {
     label: String,
     url: String,
 }
 
-impl YaakNotifier {
+impl APIDoctorNotifier {
     pub fn new() -> Self {
         Self {
             last_check: SystemTime::UNIX_EPOCH,
@@ -93,7 +93,7 @@ impl YaakNotifier {
 
         let launch_info = get_or_upsert_launch_info(app_handle);
         let req = yaak_api_client(app_handle)?
-            .request(Method::GET, "https://notify.yaak.app/notifications")
+            .request(Method::GET, "https://notify.apidoctor.app/notifications")
             .query(&[
                 ("version", &launch_info.current_version),
                 ("version_prev", &launch_info.previous_version),
@@ -109,7 +109,7 @@ impl YaakNotifier {
             return Ok(());
         }
 
-        for notification in resp.json::<Vec<YaakNotification>>().await? {
+        for notification in resp.json::<Vec<APIDoctorNotification>>().await? {
             let seen = get_kv(app_handle).await?;
             if seen.contains(&notification.id) {
                 debug!("Already seen notification {}", notification.id);

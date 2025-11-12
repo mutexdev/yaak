@@ -94,7 +94,7 @@ export function SettingsPlugins() {
                   icon="help"
                   title="View documentation"
                   onClick={() =>
-                    openUrl('https://feedback.yaak.app/help/articles/6911763-quick-start')
+                    openUrl('https://feedback.apidoctor.app/help/articles/6911763-quick-start')
                   }
                 />
               </HStack>
@@ -276,7 +276,7 @@ function InstalledPlugins() {
   return plugins.length === 0 ? (
     <div className="pb-4">
       <EmptyStateText className="text-center">
-        Plugins extend the functionality of Yaak.
+        Plugins extend the functionality of APIDoctor.
         <br />
         Add your first plugin to get started.
       </EmptyStateText>

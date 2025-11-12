@@ -1,6 +1,6 @@
 # Developer Setup
 
-Yaak is a combined Node.js and Rust monorepo. It is a [Tauri](https://tauri.app) project, so 
+APIDoctor is a combined Node.js and Rust monorepo. It is a [Tauri](https://tauri.app) project, so 
 uses Rust and HTML/CSS/JS for the main application but there is also a plugin system powered
 by a Node.js sidecar that communicates to the app over gRPC.
 

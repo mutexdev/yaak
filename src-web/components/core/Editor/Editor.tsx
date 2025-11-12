@@ -673,7 +673,7 @@ function getExtensions({
 const placeholderElFromText = (text: string | undefined) => {
   const el = document.createElement('div');
   // Default to <SPACE> because codemirror needs it for sizing. I'm not sure why, but probably something
-  // to do with how Yaak "hacks" it with CSS for single line input.
+  // to do with how APIDoctor "hacks" it with CSS for single line input.
   el.innerHTML = text ? text.replaceAll('\n', '<br/>') : ' ';
   return el;
 };

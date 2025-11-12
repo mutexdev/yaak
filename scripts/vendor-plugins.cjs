@@ -4,7 +4,7 @@ const { execSync } = require('node:child_process');
 
 const pluginsDir = path.join(__dirname, '..', 'plugins');
 
-console.log('Copying Yaak plugins to', pluginsDir);
+console.log('Copying APIDoctor plugins to', pluginsDir);
 
 for (const name of readdirSync(pluginsDir)) {
   const dir = path.join(pluginsDir, name);

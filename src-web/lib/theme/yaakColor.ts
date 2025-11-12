@@ -1,6 +1,6 @@
 import parseColor from 'parse-color';
 
-export class YaakColor {
+export class APIDoctorColor {
   private readonly appearance: 'dark' | 'light' = 'light';
 
   private hue: number = 0;
@@ -17,19 +17,19 @@ export class YaakColor {
     }
   }
 
-  static transparent(): YaakColor {
-    return new YaakColor('rgb(0,0,0)', 'light').translucify(1);
+  static transparent(): APIDoctorColor {
+    return new APIDoctorColor('rgb(0,0,0)', 'light').translucify(1);
   }
 
-  static white(): YaakColor {
-    return new YaakColor('rgb(0,0,0)', 'light').lower(1);
+  static white(): APIDoctorColor {
+    return new APIDoctorColor('rgb(0,0,0)', 'light').lower(1);
   }
 
-  static black(): YaakColor {
-    return new YaakColor('rgb(0,0,0)', 'light').lift(1);
+  static black(): APIDoctorColor {
+    return new APIDoctorColor('rgb(0,0,0)', 'light').lift(1);
   }
 
-  set(cssColor: string): YaakColor {
+  set(cssColor: string): APIDoctorColor {
     if (cssColor.startsWith('#') && cssColor.length === 9) {
       const [r, g, b, a] = hexToRgba(cssColor);
       cssColor = `rgba(${r},${g},${b},${a})`;
@@ -42,19 +42,19 @@ export class YaakColor {
     return this;
   }
 
-  clone(): YaakColor {
-    return new YaakColor(this.css(), this.appearance);
+  clone(): APIDoctorColor {
+    return new APIDoctorColor(this.css(), this.appearance);
   }
 
-  lower(mod: number): YaakColor {
+  lower(mod: number): APIDoctorColor {
     return this.appearance === 'dark' ? this._darken(mod) : this._lighten(mod);
   }
 
-  lift(mod: number): YaakColor {
+  lift(mod: number): APIDoctorColor {
     return this.appearance === 'dark' ? this._lighten(mod) : this._darken(mod);
   }
 
-  minLightness(n: number): YaakColor {
+  minLightness(n: number): APIDoctorColor {
     const c = this.clone();
     if (c.lightness < n) {
       c.lightness = n;
@@ -66,31 +66,31 @@ export class YaakColor {
     return this.lightness < 50;
   }
 
-  translucify(mod: number): YaakColor {
+  translucify(mod: number): APIDoctorColor {
     const c = this.clone();
     c.alpha = c.alpha - c.alpha * mod;
     return c;
   }
 
-  opacify(mod: number): YaakColor {
+  opacify(mod: number): APIDoctorColor {
     const c = this.clone();
     c.alpha = this.alpha + (100 - this.alpha) * mod;
     return c;
   }
 
-  desaturate(mod: number): YaakColor {
+  desaturate(mod: number): APIDoctorColor {
     const c = this.clone();
     c.saturation = c.saturation - c.saturation * mod;
     return c;
   }
 
-  saturate(mod: number): YaakColor {
+  saturate(mod: number): APIDoctorColor {
     const c = this.clone();
     c.saturation = this.saturation + (100 - this.saturation) * mod;
     return c;
   }
 
-  lighterThan(c: YaakColor): boolean {
+  lighterThan(c: APIDoctorColor): boolean {
     return this.lightness > c.lightness;
   }
 
@@ -113,13 +113,13 @@ export class YaakColor {
     return rgbaToHexNoAlpha(r, g, b);
   }
 
-  private _lighten(mod: number): YaakColor {
+  private _lighten(mod: number): APIDoctorColor {
     const c = this.clone();
     c.lightness = this.lightness + (100 - this.lightness) * mod;
     return c;
   }
 
-  private _darken(mod: number): YaakColor {
+  private _darken(mod: number): APIDoctorColor {
     const c = this.clone();
     c.lightness = this.lightness - this.lightness * mod;
     return c;
